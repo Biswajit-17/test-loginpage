@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter username" required>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" required>
+        <div style="margin-top: 6px;">
+          <input type="checkbox" id="showPassword" onclick="togglePassword()"> 
+          <label for="showPassword">Show Password</label>
+        </div>
+      </div>
+
+      <!-- Captcha -->
+      <div class="form-group">
+        <label for="captcha-input">Captcha</label>
+        <div class="captcha-box">
+          <div class="captcha" id="captcha">ABC123</div>
+          <button type="button" class="refresh-btn" onclick="generateCaptcha()">&#x21bb;</button>
+        </div>
+        <input type="text" id="captcha-input" placeholder="Enter captcha" required>
+      </div>
+
+      <!-- Login Button -->
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+  </div>
+
+  <script>
+    // Generate Captcha
+    function generateCaptcha() {
+      const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let captcha = "";
+      for (let i = 0; i < 6; i++) {  
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById("captcha").innerText = captcha;
+    }
+
+    // Toggle Show Password
+    function togglePassword() {
+      const passwordInput = document.getElementById("password");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+      } else {
+        passwordInput.type = "password";
+      }
+    }
+
+    // Form Validation
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const generated = document.getElementById("captcha").innerText.trim();
+      const entered = document.getElementById("captcha-input").value.trim();
+
+      if (entered !== generated) {
+        alert("Captcha entered was incorrect!");
+        generateCaptcha();
+        document.getElementById("captcha-input").value = "";
+      } else {
+        alert("Login successful! (captcha matched)");
+        // this.submit(); // <-- Uncomment for real backend connection
+      }
+    });
+
+    // Init captcha on page load
+    window.onload = generateCaptcha;
+  </script>
+</body>
+</html>
